@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "sonner"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { AuthProvider } from "@/components/auth-provider"
@@ -130,7 +130,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <Toaster />
+          <Toaster richColors position="top-center" />
         </AuthProvider>
       </body>
     </html>
