@@ -96,7 +96,7 @@ function MovieCardSkeleton() {
 // trending section
 function TrendingSection({ movies }: { movies: Movie[] | null }) {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section id="trending" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -143,7 +143,7 @@ function TrendingSection({ movies }: { movies: Movie[] | null }) {
 // top rated section
 function TopRatedSection({ moviesList }: { moviesList: Movie[] | null }) {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section id="top_rated" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -189,7 +189,7 @@ function TopRatedSection({ moviesList }: { moviesList: Movie[] | null }) {
 // popular section
 function PopularSection({ popularData }: { popularData: Movie[] | null }) {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section id="popular" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">

@@ -7,9 +7,9 @@ export function Footer() {
 
   const footerLinks = {
     explore: [
-      { label: "Trending", href: "/" },
-      { label: "Top Rated", href: "/" },
-      { label: "Popular", href: "/" },
+      { label: "Trending", href: "/#trending" },
+      { label: "Top Rated", href: "/#top_rated" },
+      { label: "Popular", href: "/#popular" },
       { label: "Discover", href: "/discover" },
     ],
     account: [
