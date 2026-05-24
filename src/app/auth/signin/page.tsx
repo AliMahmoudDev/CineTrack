@@ -107,7 +107,7 @@ export default function SignInPage() {
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError("") }}
                 placeholder="you@example.com"
-                className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50"
+                className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 [color-scheme:dark]"
                 autoComplete="email"
               />
             </div>
@@ -123,7 +123,7 @@ export default function SignInPage() {
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setError("") }}
                 placeholder="Enter your password"
-                className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50"
+                className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 [color-scheme:dark]"
                 autoComplete="current-password"
               />
             </div>

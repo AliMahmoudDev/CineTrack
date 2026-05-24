@@ -137,3 +137,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: oklch(0.40 0.02 270);
 }
+
+/* fix autofill text color in dark mode */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0 1000px oklch(0.16 0.005 270) inset !important;
+  caret-color: white;
+}

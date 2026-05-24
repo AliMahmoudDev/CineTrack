@@ -135,21 +135,21 @@ export default function SignUpPage() {
               <Label htmlFor="signup-email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <Input id="signup-email" type="email" value={email} onChange={(e) => { setEmail(e.target.value); setError("") }} placeholder="you@example.com" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50" autoComplete="email" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleNextStep() } }} />
+                <Input id="signup-email" type="email" value={email} onChange={(e) => { setEmail(e.target.value); setError("") }} placeholder="you@example.com" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 [color-scheme:dark]" autoComplete="email" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleNextStep() } }} />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="signup-password">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <Input id="signup-password" type="password" value={password} onChange={(e) => { setPassword(e.target.value); setError("") }} placeholder="Min 6 characters" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50" autoComplete="new-password" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleNextStep() } }} />
+                <Input id="signup-password" type="password" value={password} onChange={(e) => { setPassword(e.target.value); setError("") }} placeholder="Min 6 characters" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 [color-scheme:dark]" autoComplete="new-password" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleNextStep() } }} />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="signup-confirm">Confirm Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <Input id="signup-confirm" type="password" value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); setError("") }} placeholder="Re-enter your password" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50" autoComplete="new-password" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleNextStep() } }} />
+                <Input id="signup-confirm" type="password" value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); setError("") }} placeholder="Re-enter your password" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 [color-scheme:dark]" autoComplete="new-password" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleNextStep() } }} />
               </div>
             </div>
             <Button type="button" onClick={handleNextStep} className="w-full bg-violet-500 hover:bg-violet-600 text-white gap-2 h-11">
@@ -162,14 +162,14 @@ export default function SignUpPage() {
               <Label htmlFor="signup-name">Display Name</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <Input id="signup-name" type="text" value={name} onChange={(e) => { setName(e.target.value); setError("") }} placeholder="Your name" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleSignUp() } }} />
+                <Input id="signup-name" type="text" value={name} onChange={(e) => { setName(e.target.value); setError("") }} placeholder="Your name" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 [color-scheme:dark]" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleSignUp() } }} />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="signup-age">Age</Label>
               <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <Input id="signup-age" type="number" min={1} max={150} value={age} onChange={(e) => { setAge(e.target.value); setError("") }} placeholder="Your age" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleSignUp() } }} />
+                <Input id="signup-age" type="number" min={1} max={150} value={age} onChange={(e) => { setAge(e.target.value); setError("") }} placeholder="Your age" className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 [color-scheme:dark]" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleSignUp() } }} />
               </div>
             </div>
             <div className="space-y-2">
