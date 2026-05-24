@@ -2,7 +2,9 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { useSession } from "next-auth/react"
 import {
   Star, Clock, Calendar, ArrowLeft, Play, Bookmark, BookmarkCheck,
   DollarSign, Film, Globe, X,
@@ -40,6 +42,8 @@ export function MovieDetailClient({
   cast: CastMember[]
 }) {
   const [trailerOpen, setTrailerOpen] = useState(false)
+  const router = useRouter()
+  const { data: session } = useSession()
   const isInWatchlist = useCineStore((s) => s.isInWatchlist(movie.id))
   const addToWatchlist = useCineStore((s) => s.addToWatchlist)
   const removeFromWatchlist = useCineStore((s) => s.removeFromWatchlist)
@@ -181,6 +185,10 @@ export function MovieDetailClient({
                     : "border-zinc-700 text-zinc-300 hover:bg-zinc-800/60"
                 }`}
                 onClick={() => {
+                  if (!session) {
+                    router.push("/auth/signin")
+                    return
+                  }
                   if (saved) {
                     removeFromWatchlist(movie.id)
                   } else {

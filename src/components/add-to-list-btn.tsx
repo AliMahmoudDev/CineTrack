@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { ListPlus, ListChecks, Plus, ArrowLeft, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,6 +29,8 @@ export function AddToListBtn({
   movieRating,
   movieDate,
 }: AddToListBtnProps) {
+  const router = useRouter()
+  const { data: session } = useSession()
   const [open, setOpen] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
   const [newListName, setNewListName] = useState("")
@@ -38,6 +42,19 @@ export function AddToListBtn({
   const createList = useCineStore((s) => s.createList)
 
   const inAnyList = isMovieInAnyList(movieId)
+
+  // redirect to signin if not authenticated
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen && !session) {
+      router.push("/auth/signin")
+      return
+    }
+    setOpen(nextOpen)
+    if (!nextOpen) {
+      setShowCreate(false)
+      setNewListName("")
+    }
+  }
 
   const handleToggle = (listId: string, inList: boolean) => {
     if (inList) {
@@ -68,15 +85,6 @@ export function AddToListBtn({
     setNewListName("")
     setShowCreate(false)
     setOpen(false)
-  }
-
-  // reset state when popover closes
-  const handleOpenChange = (nextOpen: boolean) => {
-    setOpen(nextOpen)
-    if (!nextOpen) {
-      setShowCreate(false)
-      setNewListName("")
-    }
   }
 
   return (
