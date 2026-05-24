@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import {
   Star, Clock, Calendar, ArrowLeft, Play, Bookmark, BookmarkCheck,
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import { getPosterUrl } from "@/lib/tmdb"
 import { useCineStore } from "@/store/use-cine-store"
+import { useSession } from "next-auth/react"
 import type { MovieDetails } from "@/lib/tmdb"
 
 interface CastMember {
@@ -40,6 +42,8 @@ export function MovieDetailClient({
   cast: CastMember[]
 }) {
   const [trailerOpen, setTrailerOpen] = useState(false)
+  const { data: session } = useSession()
+  const router = useRouter()
   const isInWatchlist = useCineStore((s) => s.isInWatchlist(movie.id))
   const addToWatchlist = useCineStore((s) => s.addToWatchlist)
   const removeFromWatchlist = useCineStore((s) => s.removeFromWatchlist)
@@ -176,11 +180,15 @@ export function MovieDetailClient({
                 size="lg"
                 variant="outline"
                 className={`gap-2 ${
-                  saved
+                  saved && session
                     ? "border-sky-500/50 text-sky-400 hover:bg-sky-500/10"
                     : "border-zinc-700 text-zinc-300 hover:bg-zinc-800/60"
                 }`}
                 onClick={() => {
+                  if (!session) {
+                    router.push("/auth/signin")
+                    return
+                  }
                   if (saved) {
                     removeFromWatchlist(movie.id)
                   } else {
@@ -188,7 +196,7 @@ export function MovieDetailClient({
                   }
                 }}
               >
-                {saved ? (
+                {saved && session ? (
                   <>
                     <BookmarkCheck className="w-4 h-4" />
                     In Watchlist

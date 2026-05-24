@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { ListPlus, ListChecks, Plus, ArrowLeft, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input"
 import { useCineStore } from "@/store/use-cine-store"
+import { useSession } from "next-auth/react"
 
 // add to list button
 interface AddToListBtnProps {
@@ -27,6 +29,8 @@ export function AddToListBtn({
   movieRating,
   movieDate,
 }: AddToListBtnProps) {
+  const { data: session } = useSession()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
   const [newListName, setNewListName] = useState("")
@@ -38,6 +42,18 @@ export function AddToListBtn({
   const createList = useCineStore((s) => s.createList)
 
   const inAnyList = isMovieInAnyList(movieId)
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!session) {
+      router.push("/auth/signin")
+      return
+    }
+    setOpen(nextOpen)
+    if (!nextOpen) {
+      setShowCreate(false)
+      setNewListName("")
+    }
+  }
 
   const handleToggle = (listId: string, inList: boolean) => {
     if (inList) {
@@ -57,7 +73,6 @@ export function AddToListBtn({
   const handleCreateList = () => {
     if (!newListName.trim()) return
     const listId = createList(newListName.trim())
-    // auto-add the movie to the new list
     addMovieToList(listId, {
       id: movieId,
       title: movieTitle,
@@ -70,15 +85,6 @@ export function AddToListBtn({
     setOpen(false)
   }
 
-  // reset state when popover closes
-  const handleOpenChange = (nextOpen: boolean) => {
-    setOpen(nextOpen)
-    if (!nextOpen) {
-      setShowCreate(false)
-      setNewListName("")
-    }
-  }
-
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
@@ -86,12 +92,12 @@ export function AddToListBtn({
           variant="ghost"
           size="icon"
           className={`absolute bottom-2 right-2 h-7 w-7 rounded-full backdrop-blur-sm transition-colors ${
-            inAnyList
+            inAnyList && session
               ? "bg-violet-500/30 text-violet-400 hover:bg-violet-500/50"
               : "bg-black/60 text-zinc-400 hover:text-white hover:bg-black/80"
           }`}
         >
-          {inAnyList ? <ListChecks className="w-3.5 h-3.5" /> : <ListPlus className="w-3.5 h-3.5" />}
+          {inAnyList && session ? <ListChecks className="w-3.5 h-3.5" /> : <ListPlus className="w-3.5 h-3.5" />}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -99,7 +105,6 @@ export function AddToListBtn({
         align="end"
       >
         {showCreate ? (
-          /* create list form */
           <div className="space-y-2">
             <button
               className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-1"
@@ -127,7 +132,6 @@ export function AddToListBtn({
             </Button>
           </div>
         ) : (
-          /* list picker */
           <div className="space-y-1">
             {lists.length === 0 && (
               <p className="text-xs text-zinc-500 text-center py-1">
