@@ -4,6 +4,14 @@ import { useState } from "react"
 import Link from "next/link"
 import { List, Trash2, Film, ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { MovieCard } from "@/components/movie-card"
 import { CreateListDialog } from "@/components/create-list-dialog"
 import { useCineStore, type CustomList } from "@/store/use-cine-store"
@@ -11,6 +19,13 @@ import { useCineStore, type CustomList } from "@/store/use-cine-store"
 // single list view
 function ListView({ list, onBack }: { list: CustomList; onBack: () => void }) {
   const deleteList = useCineStore((s) => s.deleteList)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+
+  const handleDelete = () => {
+    deleteList(list.id)
+    setConfirmOpen(false)
+    onBack()
+  }
 
   return (
     <div className="space-y-6">
@@ -27,18 +42,40 @@ function ListView({ list, onBack }: { list: CustomList; onBack: () => void }) {
             )}
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-red-400 hover:text-red-300 hover:bg-red-500/10 gap-1"
-          onClick={() => {
-            deleteList(list.id)
-            onBack()
-          }}
-        >
-          <Trash2 className="w-4 h-4" />
-          Delete
-        </Button>
+        <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+          <DialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-red-400 hover:text-red-300 hover:bg-red-500/10 gap-1"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-zinc-900 border-zinc-800">
+            <DialogTitle>Delete List</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete <span className="text-white font-semibold">{list.name}</span>? This action cannot be undone and all movies in this list will be removed.
+            </DialogDescription>
+            <DialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setConfirmOpen(false)}
+                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDelete}
+                className="bg-red-500 hover:bg-red-600 text-white gap-1"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {list.movies.length === 0 ? (
