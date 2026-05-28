@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useSession, signIn, signOut } from "next-auth/react"
-import { Search, Bookmark, Menu, X, Film, List, LogIn, LogOut } from "lucide-react"
+import { Search, Bookmark, Menu, X, Film, List, LogIn, LogOut, Compass } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect, useRef } from "react"
 
@@ -25,7 +25,8 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/", label: "Home", icon: Film },
-    { href: "/discover", label: "Discover", icon: Search },
+    { href: "/search", label: "Search", icon: Search },
+    { href: "/discover", label: "Discover", icon: Compass },
     { href: "/watchlist", label: "Watchlist", icon: Bookmark },
     { href: "/lists", label: "Lists", icon: List },
   ]

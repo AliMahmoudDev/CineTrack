@@ -1,4 +1,4 @@
-import { Film, TrendingUp, Star, Play, Flame } from "lucide-react"
+import { Film, TrendingUp, Star, Play, Flame, Search } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import type { Metadata } from "next"
@@ -54,10 +54,20 @@ function HeroSection() {
           </p>
 
           <div className="flex items-center justify-center gap-3 pt-2">
-            <Link href="/discover">
+            <Link href="/search">
               <Button
                 size="lg"
                 className="bg-violet-500 hover:bg-violet-600 text-white gap-2"
+              >
+                <Search className="w-4 h-4" />
+                Search Movies
+              </Button>
+            </Link>
+            <Link href="/discover">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800/60 gap-2"
               >
                 <Play className="w-4 h-4" />
                 Start Exploring
