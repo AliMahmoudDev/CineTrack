@@ -73,16 +73,6 @@ function HeroSection() {
                 Start Exploring
               </Button>
             </Link>
-            <Link href="/watchlist">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800/60 gap-2"
-              >
-                <Film className="w-4 h-4" />
-                My Watchlist
-              </Button>
-            </Link>
           </div>
         </div>
       </div>
