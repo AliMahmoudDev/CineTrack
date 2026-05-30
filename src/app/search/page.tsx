@@ -2,10 +2,15 @@
 
 import { Suspense, useState, useCallback, useTransition, useMemo } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { Search, X, Loader2, ArrowUpDown } from "lucide-react"
+import { Search, X, Loader2, ArrowUpDown, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { MovieCard } from "@/components/movie-card"
 import { searchMoviesAction } from "@/actions/search"
 import type { Movie } from "@/lib/tmdb"
@@ -65,6 +70,7 @@ function SearchContent() {
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(!!initialQuery)
   const [sortBy, setSortBy] = useState<SortKey>("default")
+  const [sortOpen, setSortOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   // apply sorting
@@ -135,29 +141,41 @@ function SearchContent() {
       ) : searched && results.length > 0 ? (
         <div className="space-y-4">
           {/* results header with sort */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <p className="text-sm text-zinc-500">
               Found {results.length} result{results.length !== 1 ? "s" : ""}
             </p>
-            <div className="flex items-center gap-2">
-              <ArrowUpDown className="w-3.5 h-3.5 text-zinc-500" />
-              <span className="text-xs text-zinc-500">Sort by:</span>
-              <div className="flex gap-1">
+            <Popover open={sortOpen} onOpenChange={setSortOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800/60 gap-2"
+                >
+                  <ArrowUpDown className="w-3.5 h-3.5" />
+                  {SORT_OPTIONS.find((o) => o.key === sortBy)?.label}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-44 bg-zinc-900 border-zinc-800 p-1" align="end">
                 {SORT_OPTIONS.map((opt) => (
                   <button
                     key={opt.key}
-                    onClick={() => setSortBy(opt.key)}
-                    className={`px-2.5 py-1 rounded-md text-xs transition-colors ${
+                    onClick={() => {
+                      setSortBy(opt.key)
+                      setSortOpen(false)
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors ${
                       sortBy === opt.key
-                        ? "bg-violet-500/20 text-violet-300 border border-violet-500/40"
-                        : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60 border border-transparent"
+                        ? "text-violet-300 bg-violet-500/10"
+                        : "text-zinc-400 hover:text-white hover:bg-zinc-800/60"
                     }`}
                   >
                     {opt.label}
+                    {sortBy === opt.key && <Check className="w-3.5 h-3.5" />}
                   </button>
                 ))}
-              </div>
-            </div>
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
