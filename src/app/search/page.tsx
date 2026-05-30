@@ -1,14 +1,42 @@
 "use client"
 
-import { Suspense, useState, useCallback, useTransition } from "react"
+import { Suspense, useState, useCallback, useTransition, useMemo } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { Search, X, Loader2 } from "lucide-react"
+import { Search, X, Loader2, ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { MovieCard } from "@/components/movie-card"
 import { searchMoviesAction } from "@/actions/search"
 import type { Movie } from "@/lib/tmdb"
+
+// sort options
+type SortKey = "default" | "rating" | "date" | "title" | "popularity"
+
+const SORT_OPTIONS: { key: SortKey; label: string }[] = [
+  { key: "default", label: "Default" },
+  { key: "rating", label: "Rating" },
+  { key: "date", label: "Release Date" },
+  { key: "title", label: "Title (A-Z)" },
+  { key: "popularity", label: "Popularity" },
+]
+
+function sortMovies(movies: Movie[], sortKey: SortKey): Movie[] {
+  if (sortKey === "default") return movies
+  const sorted = [...movies]
+  switch (sortKey) {
+    case "rating":
+      return sorted.sort((a, b) => b.vote_average - a.vote_average)
+    case "date":
+      return sorted.sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime())
+    case "title":
+      return sorted.sort((a, b) => a.title.localeCompare(b.title))
+    case "popularity":
+      return sorted.sort((a, b) => b.popularity - a.popularity)
+    default:
+      return sorted
+  }
+}
 
 function SkeletonGrid() {
   return (
@@ -36,15 +64,20 @@ function SearchContent() {
   const [results, setResults] = useState<Movie[]>([])
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(!!initialQuery)
+  const [sortBy, setSortBy] = useState<SortKey>("default")
   const [isPending, startTransition] = useTransition()
 
-  // search
+  // apply sorting
+  const sortedResults = useMemo(() => sortMovies(results, sortBy), [results, sortBy])
+
+  // reset sort when new search
   const handleSearch = useCallback(async (searchQuery: string) => {
     const q = searchQuery.trim()
     if (!q) return
 
     setLoading(true)
     setSearched(true)
+    setSortBy("default")
     router.push(`/search?q=${encodeURIComponent(q)}`, { scroll: false })
 
     startTransition(async () => {
@@ -101,11 +134,34 @@ function SearchContent() {
         <SkeletonGrid />
       ) : searched && results.length > 0 ? (
         <div className="space-y-4">
-          <p className="text-sm text-zinc-500">
-            Found {results.length} result{results.length !== 1 ? "s" : ""}
-          </p>
+          {/* results header with sort */}
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-zinc-500">
+              Found {results.length} result{results.length !== 1 ? "s" : ""}
+            </p>
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="w-3.5 h-3.5 text-zinc-500" />
+              <span className="text-xs text-zinc-500">Sort by:</span>
+              <div className="flex gap-1">
+                {SORT_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.key}
+                    onClick={() => setSortBy(opt.key)}
+                    className={`px-2.5 py-1 rounded-md text-xs transition-colors ${
+                      sortBy === opt.key
+                        ? "bg-violet-500/20 text-violet-300 border border-violet-500/40"
+                        : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60 border border-transparent"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            {results.map((m) => (
+            {sortedResults.map((m) => (
               <MovieCard
                 key={m.id}
                 id={m.id}
