@@ -36,6 +36,9 @@ interface CineStore {
   removeMovieFromList: (listId: string, movieId: number) => void
   isMovieInList: (listId: string, movieId: number) => boolean
   isMovieInAnyList: (movieId: number) => boolean
+
+  // clear all data on sign out
+  clearStore: () => void
 }
 
 export const useCineStore = create<CineStore>()(
@@ -125,6 +128,10 @@ export const useCineStore = create<CineStore>()(
 
       isMovieInAnyList: (movieId) => {
         return get().lists.some((l) => l.movies.some((m) => m.id === movieId))
+      },
+
+      clearStore: () => {
+        set({ watchlist: [], lists: [] })
       },
     }),
     {

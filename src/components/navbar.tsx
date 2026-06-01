@@ -5,11 +5,13 @@ import Image from "next/image"
 import { useSession, signIn, signOut } from "next-auth/react"
 import { Search, Bookmark, Menu, X, Film, List, LogIn, LogOut, Compass } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useCineStore } from "@/store/use-cine-store"
 import { useState, useEffect, useRef } from "react"
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { data: session } = useSession()
+  const clearStore = useCineStore((s) => s.clearStore)
   const headerRef = useRef<HTMLElement>(null)
 
   // close dropdown on click outside header
@@ -82,7 +84,10 @@ export function Navbar() {
                   variant="ghost"
                   size="sm"
                   className="text-zinc-400 hover:text-white gap-1"
-                  onClick={() => signOut()}
+                  onClick={() => {
+                    clearStore()
+                    signOut()
+                  }}
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   Sign Out
@@ -139,6 +144,7 @@ export function Navbar() {
           {session ? (
             <button
               onClick={() => {
+                clearStore()
                 signOut()
                 setMobileOpen(false)
               }}
