@@ -107,7 +107,7 @@ function SearchContent() {
     if (trimmed && trimmed !== initialQuery) {
       timerRef.current = setTimeout(() => {
         handleSearch(trimmed)
-      }, 800)
+      }, 400)
     }
 
     // cleanup on unmount or before next effect run

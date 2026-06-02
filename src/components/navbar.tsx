@@ -5,6 +5,17 @@ import Image from "next/image"
 import { useSession, signIn, signOut } from "next-auth/react"
 import { Search, Bookmark, Menu, X, Film, List, LogIn, LogOut, Compass } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { useCineStore } from "@/store/use-cine-store"
 import { useState, useEffect, useRef } from "react"
 
@@ -73,28 +84,41 @@ export function Navbar() {
           {/* right side - auth */}
           <div className="hidden md:flex items-center gap-3">
             {session ? (
-              <>
-                <Image
-                  src={session.user?.image ?? "/cinetrack-icon.png"}
-                  alt={session.user?.name ?? "User"}
-                  width={32}
-                  height={32}
-                  className="rounded-full ring-2 ring-violet-500/40"
-                />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-zinc-400 hover:text-white gap-1"
-                  onClick={() => {
-                    if (session?.user?.email) saveForUser(session.user.email)
-                    clearStore()
-                    signOut()
-                  }}
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  Sign Out
-                </Button>
-              </>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-zinc-400 hover:text-white gap-1.5"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Sign Out
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-zinc-100">Sign Out</AlertDialogTitle>
+                    <AlertDialogDescription className="text-zinc-400">
+                      Are you sure you want to sign out?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700 hover:text-white">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-red-600 text-white hover:bg-red-700"
+                      onClick={() => {
+                        if (session?.user?.email) saveForUser(session.user.email)
+                        clearStore()
+                        signOut()
+                      }}
+                    >
+                      Sign Out
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             ) : (
               <Button
                 size="sm"
@@ -144,18 +168,40 @@ export function Navbar() {
           })}
           {/* auth in mobile */}
           {session ? (
-            <button
-              onClick={() => {
-                if (session?.user?.email) saveForUser(session.user.email)
-                clearStore()
-                signOut()
-                setMobileOpen(false)
-              }}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition-colors w-full"
-            >
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition-colors w-full"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-zinc-100">Sign Out</AlertDialogTitle>
+                  <AlertDialogDescription className="text-zinc-400">
+                    Are you sure you want to sign out?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700 hover:text-white">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-red-600 text-white hover:bg-red-700"
+                    onClick={() => {
+                      if (session?.user?.email) saveForUser(session.user.email)
+                      clearStore()
+                      signOut()
+                      setMobileOpen(false)
+                    }}
+                  >
+                    Sign Out
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           ) : (
             <button
               onClick={() => {
