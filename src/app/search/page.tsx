@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useState, useCallback, useTransition, useMemo } from "react"
+import { Suspense, useState, useCallback, useTransition, useMemo, useEffect, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Search, X, Loader2, ArrowUpDown, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -72,6 +72,7 @@ function SearchContent() {
   const [sortBy, setSortBy] = useState<SortKey>("default")
   const [sortOpen, setSortOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // apply sorting
   const sortedResults = useMemo(() => sortMovies(results, sortBy), [results, sortBy])
@@ -92,6 +93,31 @@ function SearchContent() {
       setLoading(false)
     })
   }, [router])
+
+  // auto-search debounce: trigger search 8 seconds after user stops typing
+  useEffect(() => {
+    // clear any existing timer
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+
+    const trimmed = query.trim()
+    // only set timer if there's a query and it's different from what we already searched
+    if (trimmed && trimmed !== initialQuery) {
+      timerRef.current = setTimeout(() => {
+        handleSearch(trimmed)
+      }, 800)
+    }
+
+    // cleanup on unmount or before next effect run
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
+    }
+  }, [query, handleSearch, initialQuery])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -202,7 +228,7 @@ function SearchContent() {
           <Search className="w-12 h-12 mx-auto text-zinc-700 mb-4" />
           <p className="text-lg text-zinc-400">Start searching</p>
           <p className="text-sm text-zinc-600 mt-1">
-            type a movie name and hit enter or click search
+            type a movie name — search triggers automatically or press Enter
           </p>
         </div>
       )}
