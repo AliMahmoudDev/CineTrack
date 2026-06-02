@@ -39,6 +39,10 @@ interface CineStore {
 
   // clear all data on sign out
   clearStore: () => void
+
+  // per-user data persistence
+  saveForUser: (email: string) => void
+  loadForUser: (email: string) => void
 }
 
 export const useCineStore = create<CineStore>()(
@@ -132,6 +136,28 @@ export const useCineStore = create<CineStore>()(
 
       clearStore: () => {
         set({ watchlist: [], lists: [] })
+      },
+
+      // save current data to user-specific key
+      saveForUser: (email) => {
+        const { watchlist, lists } = get()
+        try {
+          localStorage.setItem(
+            `cinetrack-user-${email}`,
+            JSON.stringify({ watchlist, lists })
+          )
+        } catch {}
+      },
+
+      // load data from user-specific key
+      loadForUser: (email) => {
+        try {
+          const raw = localStorage.getItem(`cinetrack-user-${email}`)
+          if (raw) {
+            const data = JSON.parse(raw)
+            set({ watchlist: data.watchlist ?? [], lists: data.lists ?? [] })
+          }
+        } catch {}
       },
     }),
     {

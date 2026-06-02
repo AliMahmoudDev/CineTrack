@@ -12,6 +12,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { data: session } = useSession()
   const clearStore = useCineStore((s) => s.clearStore)
+  const saveForUser = useCineStore((s) => s.saveForUser)
   const headerRef = useRef<HTMLElement>(null)
 
   // close dropdown on click outside header
@@ -85,6 +86,7 @@ export function Navbar() {
                   size="sm"
                   className="text-zinc-400 hover:text-white gap-1"
                   onClick={() => {
+                    if (session?.user?.email) saveForUser(session.user.email)
                     clearStore()
                     signOut()
                   }}
@@ -144,6 +146,7 @@ export function Navbar() {
           {session ? (
             <button
               onClick={() => {
+                if (session?.user?.email) saveForUser(session.user.email)
                 clearStore()
                 signOut()
                 setMobileOpen(false)
